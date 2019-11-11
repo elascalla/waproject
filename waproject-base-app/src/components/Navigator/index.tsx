@@ -1,13 +1,14 @@
 import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { variablesTheme } from '~/assets/theme';
 import IndexPage from '~/components/Screens';
 import DevPage from '~/components/Screens/_Dev';
 import LoginPage from '~/components/Screens/Login';
+import OrderCreatePage from '~/components/Screens/Order/Form';
 import UserEditPage from '~/components/Screens/Profile/Form';
 import getNavigationOptions from '~/helpers/getNavigationOptions';
 
 import HomeDrawerNavigator, { HomeDrawerScreens } from './HomeDrawer';
-import { createStackNavigator } from 'react-navigation-stack';
-import { variablesTheme } from '~/assets/theme';
 
 // import HomeTabNavigator, { HomeTabScreens } from './HomeTab';
 const Navigator = createStackNavigator(
@@ -21,6 +22,7 @@ const Navigator = createStackNavigator(
     },
 
     UserEdit: { screen: UserEditPage },
+    OrderCreate: { screen: OrderCreatePage },
     Dev: { screen: DevPage }
   },
   {
