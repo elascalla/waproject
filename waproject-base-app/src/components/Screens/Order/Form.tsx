@@ -15,7 +15,7 @@ import { IUseNavigation, useNavigation } from '~/hooks/useNavigation';
 import { IOrder } from '~/interfaces/models/order';
 import orderService from '~/services/order';
 
-const OrderEditScreen = memo((props: IUseNavigation) => {
+const OrderScreen = memo((props: IUseNavigation) => {
   const navigation = useNavigation(props);
   const validationRef = useRef<IValidationContextRef>();
 
@@ -59,7 +59,7 @@ const OrderEditScreen = memo((props: IUseNavigation) => {
                 validation='required'
                 value={model.amount}
                 flowIndex={2}
-                onChange={setModelProp('lastamountName', (value, model) => (model.amount = value))}
+                onChange={setModelProp('amount', (value, model) => (model.amount = value))}
               />
 
               <FieldText
@@ -78,15 +78,21 @@ const OrderEditScreen = memo((props: IUseNavigation) => {
   );
 });
 
-OrderEditScreen.navigationOptions = ({ navigation }) => {
+OrderScreen.navigationOptions = ({ navigation }) => {
   return {
-    title: 'Salvar',
-    headerRight: (
+    title: 'Ordem',
+    headerLeft: () => (
+      <Button style={classes.headerButton} onPress={navigation.toggleDrawer}>
+        <Icon name='menu' />
+      </Button>
+    ),
+    headerRight: navigation.getParam('onSave') && (
       <Button style={classes.headerButton} onPress={navigation.getParam('onSave')}>
         <Icon name='save' />
       </Button>
-    )
+    ),
+    drawerIcon: ({ tintColor }) => <Icon name='menu' style={{ color: tintColor }} />
   };
 };
 
-export default OrderEditScreen;
+export default OrderScreen;
