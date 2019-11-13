@@ -1,12 +1,12 @@
 import FieldText from '@react-form-fields/native-base/Text';
 import ValidationContext, { IValidationContextRef } from '@react-form-fields/native-base/ValidationContext';
-import { Button, Container, Content, Form, Icon, List } from 'native-base';
-import React, { memo, useEffect, useRef } from 'react';
-import { Keyboard } from 'react-native';
+import { Button, Card, Content, Form, Icon, Text, View } from 'native-base';
+import React, { memo, useCallback, useRef } from 'react';
+import { Keyboard, StyleSheet } from 'react-native';
 import { useCallbackObservable } from 'react-use-observable';
 import { of, timer } from 'rxjs';
 import { filter, first, switchMap, tap } from 'rxjs/operators';
-import { classes } from '~/assets/theme';
+import { classes, variablesTheme } from '~/assets/theme';
 import Toast from '~/facades/toast';
 import { loader } from '~/helpers/rxjs-operators/loader';
 import { logError } from '~/helpers/rxjs-operators/logError';
@@ -16,10 +16,12 @@ import { IOrder } from '~/interfaces/models/order';
 import orderService from '~/services/order';
 
 const OrderScreen = memo((props: IUseNavigation) => {
+  const [model, setModelProp] = useModel<IOrder>({});
+
   const navigation = useNavigation(props);
   const validationRef = useRef<IValidationContextRef>();
 
-  const [model, setModelProp] = useModel<IOrder>();
+  const onClompleteSave = useCallback(() => navigation.navigate('Home', null, true), [navigation]);
 
   const [onSave] = useCallbackObservable(() => {
     return of(true).pipe(
@@ -33,48 +35,60 @@ const OrderScreen = memo((props: IUseNavigation) => {
       logError(),
       tap(() => navigation.back(), err => Toast.showError(err))
     );
-  }, [model, navigation]);
-
-  useEffect(() => {
-    navigation.setParam({ onSave });
-  }, [navigation, onSave]);
+  }, [model, navigation, onClompleteSave]);
 
   return (
-    <Container>
+    <View style={styles.container}>
       <Content padder keyboardShouldPersistTaps='handled'>
         <Form>
           <ValidationContext ref={validationRef}>
-            <List>
+            <Card style={styles.formContainer}>
               <FieldText
-                label='Nome'
+                leftIcon='clipboard'
+                placeholder='Descrição'
                 validation='string|required|min:5|max:200'
                 value={model.description}
                 flowIndex={1}
-                onChange={setModelProp('description', (value, model) => (model.description = value))}
+                marginBottom
+                hideErrorMessage
+                onChange={setModelProp('description', (model, value) => (model.description = value))}
               />
 
               <FieldText
-                label='Quantidade'
+                leftIcon='cart'
+                placeholder='Quantidade'
                 keyboardType='number-pad'
                 validation='required'
                 value={model.amount}
                 flowIndex={2}
-                onChange={setModelProp('amount', (value, model) => (model.amount = value))}
+                marginBottom
+                hideErrorMessage
+                onChange={setModelProp('amount', (model, value) => (model.amount = value))}
               />
 
               <FieldText
-                label='Valor'
+                leftIcon='cash'
+                placeholder='Valor'
                 keyboardType='number-pad'
                 validation='required'
                 value={model.value}
                 flowIndex={3}
-                onChange={setModelProp('value', (value, model) => (model.value = value))}
+                marginBottom
+                hideErrorMessage
+                onChange={setModelProp('value', (model, value) => (model.value = value))}
+                onSubmitEditing={onSave}
               />
-            </List>
+            </Card>
+
+            <View style={styles.registerContainer}>
+              <Button onPress={onSave} success block style={styles.buttons}>
+                <Text>Salvar</Text>
+              </Button>
+            </View>
           </ValidationContext>
         </Form>
       </Content>
-    </Container>
+    </View>
   );
 });
 
@@ -82,7 +96,7 @@ OrderScreen.navigationOptions = ({ navigation }) => {
   return {
     title: 'Ordem',
     headerLeft: () => (
-      <Button style={classes.headerButton} onPress={navigation.toggleDrawer}>
+      <Button style={classes.headerButton} onPress={navigation.openDrawer}>
         <Icon name='menu' />
       </Button>
     ),
@@ -94,5 +108,25 @@ OrderScreen.navigationOptions = ({ navigation }) => {
     drawerIcon: ({ tintColor }) => <Icon name='menu' style={{ color: tintColor }} />
   };
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white'
+  },
+  buttons: {
+    marginTop: 16
+  },
+  formContainer: {
+    padding: 20,
+    width: variablesTheme.deviceWidth * 0.8,
+    flexShrink: 0
+  },
+  registerContainer: {
+    flex: 1,
+    flexGrow: 0,
+    flexShrink: 0
+  }
+});
 
 export default OrderScreen;
