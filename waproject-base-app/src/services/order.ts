@@ -23,7 +23,7 @@ export class OrderService {
 
   public save(model: IOrder): Observable<IOrder> {
     console.log(model);
-    return this.apiService.post<IOrder>('order', model).pipe(cacheClean('service-order'));
+    return this.apiService.post<IOrder>('/order/save', model).pipe(cacheClean('service-order'));
   }
 }
 

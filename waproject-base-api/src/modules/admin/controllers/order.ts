@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
 import { ApiResponse, ApiUseTags } from '@nestjs/swagger';
-import { AuthRequired } from 'modules/common/guards/token';
 import { Order } from 'modules/database/models/order';
 
 import { OrderRepository } from '../respoitories/order';
@@ -10,7 +9,6 @@ import { SaveValidator } from '../validators/order/save';
 
 @ApiUseTags('Admin: Order')
 @Controller('/order')
-@AuthRequired()
 export class OrderController {
   constructor(private orderRepository: OrderRepository, private orderService: OrderService) {}
 
@@ -34,6 +32,7 @@ export class OrderController {
   @Post('save')
   @ApiResponse({ status: 200, type: Order })
   public async save(@Body() model: SaveValidator) {
+    console.log('Aqui');
     return this.orderService.save(model);
   }
 }
