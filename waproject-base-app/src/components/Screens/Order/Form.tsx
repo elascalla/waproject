@@ -95,9 +95,10 @@ const OrderScreen = memo((props: IUseNavigation) => {
 OrderScreen.navigationOptions = ({ navigation }) => {
   return {
     title: 'Ordem',
+    tabBarLabel: 'Ordem',
     headerLeft: () => (
       <Button style={classes.headerButton} onPress={navigation.openDrawer}>
-        <Icon name='menu' />
+        <Icon name='menu' style={classes.headerButtonIcon} />
       </Button>
     ),
     headerRight: navigation.getParam('onSave') && (

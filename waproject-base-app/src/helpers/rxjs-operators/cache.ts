@@ -34,7 +34,9 @@ export function cacheClean<T>(key?: string) {
       tapSubscribe<T>(() =>
         from(
           key
-            ? Promise.resolve(globalCacheService.removeItem(key))
+            ? globalCacheService.getItem(key) != null
+              ? Promise.resolve(globalCacheService.removeItem(key))
+              : () => (keysCreated = [])
             : Promise.all(keysCreated.map(key => Promise.resolve(globalCacheService.removeItem(key)))).then(
                 () => (keysCreated = [])
               )

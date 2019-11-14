@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import cache, { cacheClean } from '~/helpers/rxjs-operators/cache';
+import cache from '~/helpers/rxjs-operators/cache';
 import { IOrder } from '~/interfaces/models/order';
 
 import apiService, { ApiService } from './api';
@@ -22,8 +22,7 @@ export class OrderService {
   }
 
   public save(model: IOrder): Observable<IOrder> {
-    console.log(model);
-    return this.apiService.post<IOrder>('/order/save', model).pipe(cacheClean('service-order'));
+    return this.apiService.post<IOrder>('/order/save', model);
   }
 }
 

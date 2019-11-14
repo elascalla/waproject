@@ -1,9 +1,9 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsDecimal, IsInt, IsNotEmpty, IsString, MaxLength, Min, MinLength } from 'class-validator';
+import { IsDecimal, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min, MinLength } from 'class-validator';
 import { IOrder } from 'interfaces/models/order';
 
 export class SaveValidator implements IOrder {
-  @IsNotEmpty()
+  @IsOptional()
   @IsInt()
   @Min(1)
   @ApiModelProperty({ required: true, type: 'integer' })
@@ -17,8 +17,8 @@ export class SaveValidator implements IOrder {
   public description: string;
 
   @IsNotEmpty()
-  @IsInt()
-  @ApiModelProperty({ required: false, type: 'integer' })
+  @IsDecimal()
+  @ApiModelProperty({ required: false, type: 'number' })
   public amount: number;
 
   @IsNotEmpty()

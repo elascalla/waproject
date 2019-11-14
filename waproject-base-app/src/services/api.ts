@@ -38,6 +38,7 @@ export class ApiService {
   }
 
   public post<T = any>(url: string, body: any): Observable<T> {
+    console.log(url, body);
     return this.request('POST', url, body);
   }
 

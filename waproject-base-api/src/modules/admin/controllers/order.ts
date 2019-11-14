@@ -32,7 +32,6 @@ export class OrderController {
   @Post('save')
   @ApiResponse({ status: 200, type: Order })
   public async save(@Body() model: SaveValidator) {
-    console.log('Aqui');
     return this.orderService.save(model);
   }
 }
